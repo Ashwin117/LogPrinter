@@ -27,39 +27,45 @@ module.exports = (logSources, printer) => {
 		promiseWhile(() => {
 			return peekLogList.length > 0;
 		}, () => {
-			printer.print(peekLogList[0], peekLogList);
-			const logSource = logMap.get(peekLogList[0]);
-			return logSource.popAsync()
-			.then((result) => {
-				peekLogList[0] = result;
-				logMap.set(peekLogList[0], logSource);
+			return new P((resolve, reject) => {
+				printer.print(peekLogList[0], peekLogList);
+				const logSource = logMap.get(peekLogList[0]);
+				return logSource.popAsync()
+				.then((result) => {
+					if (!result) {
+						resolve();
+					}
+					peekLogList[0] = result;
+					logMap.set(peekLogList[0], logSource);
 
-				if (!peekLogList[0]) {
-					// Remove the element from array with with a queue-like shift if the log source is drained
-					peekLogList.shift();
-				} else {
-					// Use bubbleswap to efficiently resort the list
-					bubbleSwapByDate(peekLogList);
-				}
+					if (!peekLogList[0]) {
+						// Remove the element from array with with a queue-like shift if the log source is drained
+						peekLogList.shift();
+					} else {
+						// Use bubbleswap to efficiently resort the list
+						bubbleSwapByDate(peekLogList);
+					}
+					resolve();
+				})
 			})
 		})
 	})
 }
 
 function promiseWhile(condition, action) {
-	const resolver = P.defer();
+	const deferred = P.defer();
 
 	const loop = () => {
 		if (!condition()) {
-			return resolver.resolve();
+			return deferred.resolve();
 		}
 		return P.cast(action())
 			.then(loop)
-			.catch(resolver.reject);
+			.catch(deferred.reject);
 	}
 	process.nextTick(loop);
 
-	return resolver.promise;
+	return deferred.promise;
 }
 
 function bubbleSwapByDate(list) {
