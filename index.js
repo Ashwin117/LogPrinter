@@ -4,7 +4,7 @@ const LogSource = require('./lib/log-source')
 const Printer = require('./lib/printer')
 
 // You can adjust this variable to see how your solutions perform under various "load"
-const sourceCount = 5
+const sourceCount = 3
 
 /**
  * Challenge Number 1!
@@ -26,13 +26,13 @@ const sourceCount = 5
  * This function will ensure that what you print is in fact in chronological order.
  * Call 'printer.done()' at the end to get a few stats on your solution!
  */
-/*
+
 const syncLogSources = []
 for (let i = 0; i < sourceCount; i++) {
 	syncLogSources.push(new LogSource())
 }
 require('./solution/sync-sorted-merge')(syncLogSources, new Printer())
-*/
+
 /**
  * Challenge Number 2!
  *

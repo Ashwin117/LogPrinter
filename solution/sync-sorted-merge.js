@@ -30,6 +30,8 @@ module.exports = (logSources, printer) => {
 			bubbleSwapByDate(peekLogList);
 		}
 	}
+
+	checkDrained(logSources);
 }
 
 function bubbleSwapByDate(list) {
@@ -44,3 +46,11 @@ function bubbleSwapByDate(list) {
 	}
 }
 
+function checkDrained(logSources) {
+	for (var i=0; i<logSources.length; i++){
+		if (!logSources[i].drained) {
+			throw new Error('Log sources are not drained');
+		}
+	}
+	console.log('Done');
+}
