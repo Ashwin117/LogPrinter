@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = (logSources, printer) => {	
-	//Retrieve the first first log entry in each logSource and store it into an Array
+	// Retrieve the first first log entry in each logSource and store it into an Array
 	
 	const logMap = new Map();
 
