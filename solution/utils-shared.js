@@ -7,6 +7,8 @@ module.exports = {
 		input.sort((el1, el2) => {
 			return  el1.date - el2.date;
 		});
+
+		return input;
 	},
 	bubbleSwapByDate(list) {
 		for (let counter = 0; counter < list.length-1; counter++) {
@@ -18,6 +20,8 @@ module.exports = {
 			}
 			break;
 		}
+
+		return list;
 	},
 	checkDrained(logSources) {
 		for (var i=0; i<logSources.length; i++){
@@ -25,21 +29,6 @@ module.exports = {
 				throw new Error('Log sources are not drained');
 			}
 		}
-		console.log('Done');
-	},
-	promiseWhile(condition, action) {
-		const deferred = P.defer();
-
-		const loop = () => {
-			if (!condition()) {
-				return deferred.resolve();
-			}
-			return P.cast(action())
-				.then(loop)
-				.catch(deferred.reject);
-		}
-		process.nextTick(loop);
-
-		return deferred.promise;
+		console.log('Log sources are all drained');
 	}
 }

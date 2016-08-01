@@ -19,12 +19,11 @@ module.exports = (logSources, printer) => {
 		return result;
 	})
 	.then((result) => {
-		utils.sortDateByAscending(result);
-		return result;
+		return utils.sortDateByAscending(result);
 	})
 	.then((result) => {
 		const peekLogList = result;
-		utils.promiseWhile(() => {
+		promiseWhile(() => {
 			return peekLogList.length > 0;
 		}, () => {
 			return new P((resolve, reject) => {
@@ -53,4 +52,20 @@ module.exports = (logSources, printer) => {
 			utils.checkDrained(logSources)
 		})
 	})
+}
+
+function promiseWhile(condition, action) {
+	const deferred = P.defer();
+
+	const loop = () => {
+		if (!condition()) {
+			return deferred.resolve();
+		}
+		return P.cast(action())
+			.then(loop)
+			.catch(deferred.reject);
+	}
+	process.nextTick(loop);
+
+	return deferred.promise;
 }
