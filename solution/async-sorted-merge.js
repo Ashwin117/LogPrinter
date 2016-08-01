@@ -1,5 +1,7 @@
 'use strict'
+
 const P = require('bluebird');
+const utils = require('./utils-shared');
 
 module.exports = (logSources, printer) => {
 
@@ -17,14 +19,12 @@ module.exports = (logSources, printer) => {
 		return result;
 	})
 	.then((result) => {
-		result.sort((el1, el2) => {
-			return  el1.date - el2.date;
-		});
+		utils.sortDateByAscending(result);
 		return result;
 	})
 	.then((result) => {
 		const peekLogList = result;
-		promiseWhile(() => {
+		utils.promiseWhile(() => {
 			return peekLogList.length > 0;
 		}, () => {
 			return new P((resolve, reject) => {
@@ -43,52 +43,14 @@ module.exports = (logSources, printer) => {
 						peekLogList.shift();
 					} else {
 						// Use bubbleswap to efficiently resort the list
-						bubbleSwapByDate(peekLogList);
+						utils.bubbleSwapByDate(peekLogList);
 					}
 					resolve();
 				})
 			})
 		})
 		.done(() => {
-			checkDrained(logSources)
+			utils.checkDrained(logSources)
 		})
 	})
 }
-
-function promiseWhile(condition, action) {
-	const deferred = P.defer();
-
-	const loop = () => {
-		if (!condition()) {
-			return deferred.resolve();
-		}
-		return P.cast(action())
-			.then(loop)
-			.catch(deferred.reject);
-	}
-	process.nextTick(loop);
-
-	return deferred.promise;
-}
-
-function bubbleSwapByDate(list) {
-	for (let counter = 0; counter < list.length-1; counter++) {
-		if (list[counter].date > list[counter+1].date) {
-			const temp = list[counter+1];
-			list[counter+1] = list[counter];
-			list[counter] = temp;
-			continue;
-		}
-		break;
-	}
-}
-
-function checkDrained(logSources) {
-	for (var i=0; i<logSources.length; i++){
-		if (!logSources[i].drained) {
-			throw new Error('Log sources are not drained');
-		}
-	}
-	console.log('Done');
-}
-

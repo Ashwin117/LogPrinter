@@ -1,5 +1,7 @@
 'use strict'
 
+const utils = require('./utils-shared');
+
 module.exports = (logSources, printer) => {	
 	// Retrieve the first first log entry in each logSource and store it into an Array
 	
@@ -12,9 +14,7 @@ module.exports = (logSources, printer) => {
 	});
 
 	// Sort the peekLogList
-	peekLogList.sort((el1, el2) => {
-		return  el1.date - el2.date;
-	});
+	utils.sortDateByAscending(peekLogList);
 
 	while (peekLogList.length > 0) {
 		printer.print(peekLogList[0], peekLogList);
@@ -27,30 +27,9 @@ module.exports = (logSources, printer) => {
 			peekLogList.shift();
 		} else {
 			// Use bubbleswap to efficiently resort the list
-			bubbleSwapByDate(peekLogList);
+			utils.bubbleSwapByDate(peekLogList);
 		}
 	}
 
-	checkDrained(logSources);
-}
-
-function bubbleSwapByDate(list) {
-	for (let counter = 0; counter < list.length-1; counter++) {
-		if (list[counter].date > list[counter+1].date) {
-			const temp = list[counter+1];
-			list[counter+1] = list[counter];
-			list[counter] = temp;
-			continue;
-		}
-		break;
-	}
-}
-
-function checkDrained(logSources) {
-	for (var i=0; i<logSources.length; i++){
-		if (!logSources[i].drained) {
-			throw new Error('Log sources are not drained');
-		}
-	}
-	console.log('Done');
+	utils.checkDrained(logSources);
 }
