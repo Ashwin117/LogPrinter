@@ -33,10 +33,8 @@ module.exports = (logSources, printer) => {
 					logMap.set(peekLogList[0], logSource);
 
 					if (!peekLogList[0]) {
-						// Remove the element from array with with a queue-like shift if the log source is drained
 						peekLogList.shift();
 					} else {
-						// Use bubbleswap to efficiently resort the list
 						utils.binaryInsertion(peekLogList);
 					}
 				});
