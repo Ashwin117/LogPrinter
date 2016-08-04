@@ -4,7 +4,7 @@ const LogSource = require('./lib/log-source')
 const Printer = require('./lib/printer')
 
 // You can adjust this variable to see how your solutions perform under various "load"
-const sourceCount = 6
+const sourceCount = 3
 
 /**
  * Challenge Number 1!

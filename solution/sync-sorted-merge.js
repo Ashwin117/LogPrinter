@@ -27,7 +27,7 @@ module.exports = (logSources, printer) => {
 			peekLogList.shift();
 		} else {
 			// Use binary insertion to efficiently insert to the list
-			utils.binaryInsertion(peekLogList);
+			utils.binarySwap(peekLogList);
 		}
 	}
 

@@ -35,7 +35,7 @@ module.exports = (logSources, printer) => {
 					if (!peekLogList[0]) {
 						peekLogList.shift();
 					} else {
-						utils.binaryInsertion(peekLogList);
+						utils.binarySwap(peekLogList);
 					}
 				});
 			}

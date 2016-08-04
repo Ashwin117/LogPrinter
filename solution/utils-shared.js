@@ -10,7 +10,7 @@ module.exports = {
 
 		return input;
 	},
-	binaryInsertion(list) {
+	binarySwap(list) {
 		if (list.length === 1) {
 			return list;
 		}
@@ -25,7 +25,7 @@ module.exports = {
 			return list;
 
 		}
-		return binarySwap(list, moveable, 0, list.length-1);
+		return binaryInsertion(list, moveable, 0, list.length-1);
 	},
 	checkDrained(logSources) {
 		for (var i=0; i<logSources.length; i++){
@@ -37,7 +37,7 @@ module.exports = {
 	}
 }
 
-function binarySwap(list, moveable, begin, end) {
+function binaryInsertion(list, moveable, begin, end) {
 	if (begin === end) {
 		if (moveable.date <= list[begin].date) {
 			return begin;
@@ -48,9 +48,9 @@ function binarySwap(list, moveable, begin, end) {
 	const half = Math.floor((begin + end) / 2);
 	let lindex, rindex;
 	if (moveable.date <= list[half].date) {
-		lindex = binarySwap(list, moveable, begin, half);
+		lindex = binaryInsertion(list, moveable, begin, half);
 	} else {
-		rindex = binarySwap(list, moveable, half+1, end);
+		rindex = binaryInsertion(list, moveable, half+1, end);
 	}
 
 	if (!isNaN(lindex)) {
