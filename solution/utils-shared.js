@@ -16,21 +16,22 @@ module.exports = {
 		}
 
 		const moveable = list.shift();
+		if (list.length === 1) {
+			if (moveable.date <= list[0].date) {
+				list.splice(0, 0, moveable);
+				return list;
+			} else {
+				list.splice(1, 0, moveable);
+				return list;
+			}
+		}
 		return binarySwap(list, 0, list.length-1);
-		
+
 		function binarySwap(list, begin, end) {
 			if (begin === end) {
 				if (moveable.date <= list[begin].date) {
-					if (list.length == 1) {
-						list.splice(begin, 0, moveable);
-						return list;
-					}
 					return begin;
 				} else {
-					if (list.length == 1) {
-						list.splice(begin+1, 0, moveable);
-						return list;
-					}
 					return begin+1;
 				}
 			}
@@ -45,7 +46,7 @@ module.exports = {
 			if (!isNaN(lindex)) {
 				list.splice(lindex, 0, moveable);
 			}
-			if (!isNaN(rindex)) {
+			else if (!isNaN(rindex)) {
 				list.splice(rindex, 0, moveable);
 			}
 

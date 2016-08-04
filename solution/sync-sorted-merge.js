@@ -26,7 +26,7 @@ module.exports = (logSources, printer) => {
 			// Remove the element from array with with a queue-like shift if the log source is drained
 			peekLogList.shift();
 		} else {
-			// Use bubbleswap to efficiently resort the list
+			// Use binary insertion to efficiently insert to the list
 			utils.binaryInsertion(peekLogList);
 		}
 	}
