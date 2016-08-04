@@ -15,8 +15,10 @@ module.exports = {
 			return list;
 		}
 
-		return binarySwap(list, list.shift(), 0, list.length-1);
-		function binarySwap(list, moveable, begin, end) {
+		const moveable = list.shift();
+		return binarySwap(list, 0, list.length-1);
+		
+		function binarySwap(list, begin, end) {
 			if (begin === end) {
 				if (moveable.date <= list[begin].date) {
 					if (list.length == 1) {
@@ -32,12 +34,12 @@ module.exports = {
 					return begin+1;
 				}
 			}
-			var half = Math.floor((begin + end) / 2);
-			var lindex, rindex;
+			const half = Math.floor((begin + end) / 2);
+			let lindex, rindex;
 			if (moveable.date <= list[half].date) {
-				lindex = binarySwap(list, moveable, begin, half);
+				lindex = binarySwap(list, begin, half);
 			} else {
-				rindex = binarySwap(list, moveable, half+1, end);
+				rindex = binarySwap(list, half+1, end);
 			}
 
 			if (!isNaN(lindex)) {
@@ -53,7 +55,6 @@ module.exports = {
 	checkDrained(logSources) {
 		for (var i=0; i<logSources.length; i++){
 			if (!logSources[i].drained) {
-				debugger;
 				throw new Error('Log sources are not drained');
 			}
 		}

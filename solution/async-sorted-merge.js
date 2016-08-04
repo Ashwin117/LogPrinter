@@ -23,17 +23,12 @@ module.exports = (logSources, printer) => {
 	})
 	.then((result) => {
 		const peekLogList = result;
-		promiseWhile(() => {
-			return peekLogList.length > 0;
-		}, () => {
-			return new P((resolve, reject) => {
+		P.coroutine(function*() {	
+			while (peekLogList.length > 0) {
 				printer.print(peekLogList[0], peekLogList);
 				const logSource = logMap.get(peekLogList[0]);
-				return logSource.popAsync()
+				yield P.resolve(logSource.popAsync())
 				.then((result) => {
-					if (!result) {
-						resolve();
-					}
 					peekLogList[0] = result;
 					logMap.set(peekLogList[0], logSource);
 
@@ -44,28 +39,11 @@ module.exports = (logSources, printer) => {
 						// Use bubbleswap to efficiently resort the list
 						utils.binaryInsertion(peekLogList);
 					}
-					resolve();
-				})
-			})
-		})
+				});
+			}
+		})()
 		.done(() => {
 			utils.checkDrained(logSources)
 		})
 	})
-}
-
-function promiseWhile(condition, action) {
-	const deferred = P.defer();
-
-	const loop = () => {
-		if (!condition()) {
-			return deferred.resolve();
-		}
-		return P.cast(action())
-			.then(loop)
-			.catch(deferred.reject);
-	}
-	process.nextTick(loop);
-
-	return deferred.promise;
 }
