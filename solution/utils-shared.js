@@ -23,34 +23,9 @@ module.exports = {
 				list.splice(1, 0, moveable);
 			}
 			return list;
+
 		}
-		return binarySwap(list, 0, list.length-1);
-
-		function binarySwap(list, begin, end) {
-			if (begin === end) {
-				if (moveable.date <= list[begin].date) {
-					return begin;
-				} else {
-					return begin+1;
-				}
-			}
-			const half = Math.floor((begin + end) / 2);
-			let lindex, rindex;
-			if (moveable.date <= list[half].date) {
-				lindex = binarySwap(list, begin, half);
-			} else {
-				rindex = binarySwap(list, half+1, end);
-			}
-
-			if (!isNaN(lindex)) {
-				list.splice(lindex, 0, moveable);
-			}
-			else if (!isNaN(rindex)) {
-				list.splice(rindex, 0, moveable);
-			}
-
-			return list;
-		}
+		return binarySwap(list, moveable, 0, list.length-1);
 	},
 	checkDrained(logSources) {
 		for (var i=0; i<logSources.length; i++){
@@ -60,4 +35,30 @@ module.exports = {
 		}
 		console.log('Log sources are all drained');
 	}
+}
+
+function binarySwap(list, moveable, begin, end) {
+	if (begin === end) {
+		if (moveable.date <= list[begin].date) {
+			return begin;
+		} else {
+			return begin+1;
+		}
+	}
+	const half = Math.floor((begin + end) / 2);
+	let lindex, rindex;
+	if (moveable.date <= list[half].date) {
+		lindex = binarySwap(list, moveable, begin, half);
+	} else {
+		rindex = binarySwap(list, moveable, half+1, end);
+	}
+
+	if (!isNaN(lindex)) {
+		list.splice(lindex, 0, moveable);
+	}
+	else if (!isNaN(rindex)) {
+		list.splice(rindex, 0, moveable);
+	}
+
+	return list;
 }
