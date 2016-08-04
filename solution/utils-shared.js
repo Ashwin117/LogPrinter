@@ -19,11 +19,10 @@ module.exports = {
 		if (list.length === 1) {
 			if (moveable.date <= list[0].date) {
 				list.splice(0, 0, moveable);
-				return list;
 			} else {
 				list.splice(1, 0, moveable);
-				return list;
 			}
+			return list;
 		}
 		return binarySwap(list, 0, list.length-1);
 
