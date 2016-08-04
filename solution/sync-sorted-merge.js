@@ -27,7 +27,7 @@ module.exports = (logSources, printer) => {
 			peekLogList.shift();
 		} else {
 			// Use bubbleswap to efficiently resort the list
-			utils.bubbleSwapByDate(peekLogList);
+			utils.binaryInsertion(peekLogList);
 		}
 	}
 
